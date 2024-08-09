@@ -75,7 +75,6 @@ try {
 
     # Attempt to get the directory role
     $role = Get-MgDirectoryRoleByRoleTemplateId -RoleTemplateId $directoryRoleTemplateId -ErrorAction Stop
-    Write-Host('The ' + $role.DisplayName + ' role is activated.')
 }
 catch {
     $errorDetails = $_
@@ -88,13 +87,15 @@ catch {
         Write-Host $errorMessage
         Write-Host 'Activating the role ...'
         New-MgDirectoryRole -RoleTemplateId $directoryRoleTemplateId -Confirm
-        Write-Host('The ' + $role.DisplayName + ' role is activated.')
+        # Attempt to get the directory role again
+        $role = Get-MgDirectoryRoleByRoleTemplateId -RoleTemplateId $directoryRoleTemplateId -ErrorAction Stop
     }
     else {
         # Handle other errors
         Write-Host $errorException
     }
 }
+Write-Host('The ' + $role.DisplayName + ' role is activated.')
 
 try {
     # Use the constructed OdataId directly in the cmdlet
